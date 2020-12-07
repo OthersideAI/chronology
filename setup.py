@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='chronological',
-    version='0.0.3',
+    version='0.0.4',
     description='Chain GPT calls like a pro!',
     url='https://github.com/bramses/chronology.git',
     author='Otherside AI',
