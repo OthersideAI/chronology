@@ -8,6 +8,6 @@ setup(
     author='Otherside AI',
     author_email='bram@othersideai.com',
     license='unlicense',
-    packages=['chronology-ai', 'openai', 'python-dotenv'],
+    packages=['openai', 'python-dotenv'],
     zip_safe=False,
 )
