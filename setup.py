@@ -8,6 +8,6 @@ setup(
     author='Otherside AI',
     author_email='bram@othersideai.com',
     license='unlicense',
-    packages=['openai', 'python-dotenv'],
+    install_requires=['openai', 'python-dotenv'],
     zip_safe=False,
 )
