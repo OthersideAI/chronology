@@ -1,7 +1,7 @@
 from setuptools import setup
 
 setup(
-    name='chronology',
+    name='chronology-ai',
     version='0.0.1',
     description='Chain GPT calls like a pro!',
     url='git@github.com:bramses/chronology-ai.git',
