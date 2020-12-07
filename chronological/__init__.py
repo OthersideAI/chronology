@@ -100,7 +100,7 @@ def read_prompt(filename):
 
     Example: prompts/hello-world.txt -> read_prompt('hello-world')
     '''
-    return Path('../prompts/{0}.txt'.format(filename)).read_text()
+    return Path('./prompts/{0}.txt'.format(filename)).read_text()
 
 
 async def gather(*args):
