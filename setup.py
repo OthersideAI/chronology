@@ -1,4 +1,4 @@
-from setuptools import setup
+from setuptools import setup, find_packages
 
 setup(
     name='chronological',
@@ -8,6 +8,8 @@ setup(
     author='Otherside AI',
     author_email='bram@othersideai.com',
     license='unlicense',
+    packages=find_packages(),
     install_requires=['openai', 'python-dotenv'],
     zip_safe=False,
+    python_requires='>=3.7',
 )
