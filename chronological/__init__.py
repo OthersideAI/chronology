@@ -7,6 +7,7 @@ from dotenv import load_dotenv
 env_path = Path('.') / '.env'
 load_dotenv(dotenv_path=env_path)
 import os
+import time
 
 openai.api_key = os.getenv("OPENAI_API_KEY")
 
@@ -175,4 +176,7 @@ def main(fn):
     '''
     Main function that runs logic. Accepts a function implemented on your end!
     '''
+    tic = time.perf_counter()
     asyncio.run(fn())
+    toc = time.perf_counter()
+    logger.debug(f"FINISHED WORKFLOW IN {toc - tic:0.4f} SECONDS")
