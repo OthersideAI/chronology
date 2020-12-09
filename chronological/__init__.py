@@ -172,11 +172,11 @@ async def fetch_max_search_doc(q, docs, engine="ada", min_score_cutoff=-1, full_
             return None
 
 
-def main(fn):
+def main(fn, **args):
     '''
     Main function that runs logic. Accepts a function implemented on your end!
     '''
     tic = time.perf_counter()
-    asyncio.run(fn())
+    asyncio.run(fn(**args))
     toc = time.perf_counter()
     logger.debug(f"FINISHED WORKFLOW IN {toc - tic:0.4f} SECONDS")
