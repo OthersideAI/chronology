@@ -54,15 +54,9 @@ async def _completion(prompt, engine="ada", max_tokens=64, temperature=0.7, top_
 
 # Helpers
 
-
-def _max_search_doc_DEPRECATED(resp, n):
-    max_doc = max(resp.data, key=lambda x: x['score'])
-    return (max_doc, max_doc.document, max_doc.score)
-
 def _max_search_doc(resp, n):
-    max_docs = heapq.nlargest(n, resp, key=lambda x: x['score'])
+    max_docs = heapq.nlargest(n, resp['data'], key=lambda x: x['score'])
     return max_docs
-
 
 def _fetch_response(resp):
     return resp.choices[0].text
@@ -172,9 +166,9 @@ async def fetch_max_search_doc(q, docs, engine="ada", min_score_cutoff=-1, full_
         max_docs =  _max_search_doc(resp, n)
         max_docs_filtered = []
         for doc in max_docs:
-            if float(doc[2]) > min_score_cutoff:
-                max_docs_filtered.append(docs[doc[1]])
-        if len(max_docs_filtered) == 0:
+            if float(doc['score']) > min_score_cutoff:
+                max_docs_filtered.append(docs[doc['document']])
+        if len(max_docs_filtered) > 0:
             return max_docs_filtered
         else:
             return None
@@ -182,9 +176,9 @@ async def fetch_max_search_doc(q, docs, engine="ada", min_score_cutoff=-1, full_
         max_docs =  _max_search_doc(resp, n)
         max_docs_filtered = []
         for doc in max_docs:
-            if float(doc[2]) > min_score_cutoff:
+            if float(doc['score']) > min_score_cutoff:
                 max_docs_filtered.append(doc)
-        if len(max_docs_filtered) == 0:
+        if len(max_docs_filtered) > 0:
             return max_docs_filtered
         else:
             return None
