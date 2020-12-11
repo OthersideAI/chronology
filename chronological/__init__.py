@@ -8,6 +8,7 @@ env_path = Path('.') / '.env'
 load_dotenv(dotenv_path=env_path)
 import os
 import time
+import heapq
 
 openai.api_key = os.getenv("OPENAI_API_KEY")
 
@@ -54,9 +55,13 @@ async def _completion(prompt, engine="ada", max_tokens=64, temperature=0.7, top_
 # Helpers
 
 
-def _max_search_doc(resp):
+def _max_search_doc_DEPRECATED(resp, n):
     max_doc = max(resp.data, key=lambda x: x['score'])
     return (max_doc, max_doc.document, max_doc.score)
+
+def _max_search_doc(resp, n):
+    max_docs = heapq.nlargest(n, resp, key=lambda x: x['score'])
+    return max_docs
 
 
 def _fetch_response(resp):
@@ -149,7 +154,7 @@ async def raw_completion(prompt, engine="ada", max_tokens=64, temperature=0.7, t
     return _fetch_response(resp)
 
 
-async def fetch_max_search_doc(q, docs, engine="ada", min_score_cutoff=-1, full_doc=False):
+async def fetch_max_search_doc(q, docs, engine="ada", min_score_cutoff=-1, full_doc=False, n=1):
     '''
     Fetch document value with max score. Wrapper for OpenAI API Search.
 
@@ -157,17 +162,30 @@ async def fetch_max_search_doc(q, docs, engine="ada", min_score_cutoff=-1, full_
 
     min_score_cutoff = if maximum score is less than cutoff, None will be returned. Defaults to -1
 
-    full_doc = return whole response with max, but doesn't grab doc for you. Defaults to False
+    full_doc = return whole response with max, but doesn't grab doc for you. Defaults to False. [doc, doc.index, doc.score]
     '''
+    if n > len(docs):
+        return 'N > # of docs'
+
     resp = await _search(q, docs, engine=engine)
-    if not full_doc: 
-        if float(_max_search_doc(resp)[2]) > min_score_cutoff:
-            return docs[_max_search_doc(resp)[1]]
+    if not full_doc:
+        max_docs =  _max_search_doc(resp, n)
+        max_docs_filtered = []
+        for doc in max_docs:
+            if float(doc[2]) > min_score_cutoff:
+                max_docs_filtered.append(docs[doc[1]])
+        if len(max_docs_filtered) == 0:
+            return max_docs_filtered
         else:
             return None
     else:
-        if float(_max_search_doc(resp)[2]) > min_score_cutoff:
-            return _max_search_doc(resp)
+        max_docs =  _max_search_doc(resp, n)
+        max_docs_filtered = []
+        for doc in max_docs:
+            if float(doc[2]) > min_score_cutoff:
+                max_docs_filtered.append(doc)
+        if len(max_docs_filtered) == 0:
+            return max_docs_filtered
         else:
             return None
 
