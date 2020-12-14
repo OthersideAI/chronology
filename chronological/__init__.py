@@ -12,6 +12,9 @@ import heapq
 
 openai.api_key = os.getenv("OPENAI_API_KEY")
 
+async def set_api_key(api_key):
+    openai.api_key = api_key
+
 # oai
 
 async def _search(q, docs, engine="ada"):
