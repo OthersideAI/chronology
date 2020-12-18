@@ -28,7 +28,7 @@ To use chronology, you must
 
 # real-world applications
 
-Chronology is the backbone of OthersideAI. We use it to chain prompt calls and asyncronously call GPT-3. Our application is highly complex, and has many steps. Chronology allows us to parallelize those steps, significantly cutting down the time it takes to generate an email.
+Chronology is the backbone of https://OthersideAI.com. We use it to chain prompt calls and asyncronously call GPT-3. Our application is highly complex, and has many steps. Chronology allows us to parallelize those steps, significantly cutting down the time it takes to generate an email.
 
 We are also using Chronology to power other internal (shhhhhh) projects. We will be sharing more about these soon!
 
