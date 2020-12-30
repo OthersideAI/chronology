@@ -38,7 +38,7 @@ You now have a few options. You can use the UI to generate the chain or you can 
 
 ## [Using ChronologyUI](https://github.com/OthersideAI/chronology-ui)
 
-Here is a [Loom video](https://www.loom.com/share/47cb8d328ebd446db4d98ea1c0cac2c7?sharedAppSource=personal_library) showing how to use the UI with the Python `[chronology](https://github.com/OthersideAI/chronology)` package.
+Here is a [Loom video](https://www.loom.com/share/47cb8d328ebd446db4d98ea1c0cac2c7?sharedAppSource=personal_library) showing how to use the UI with the Python [`chronology`](https://github.com/OthersideAI/chronology) package.
 
 ## Using the API Directly
 
