@@ -31,6 +31,7 @@ This project also depends on the following packages:
 # Usage
 
 After you have downloaded the package, create a `.env` file at the root of your project and put your OpenAI API key in as:
+
 `OPENAI_API_KEY = "MY_API_KEY"`
 
 You now have a few options. You can use the UI to generate the chain or you can use the API directly.
