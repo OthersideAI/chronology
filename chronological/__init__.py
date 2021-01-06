@@ -1,3 +1,5 @@
+import heapq
+import time
 import asyncio
 import openai
 import os
@@ -6,16 +8,15 @@ from loguru import logger
 from dotenv import load_dotenv
 env_path = Path('.') / '.env'
 load_dotenv(dotenv_path=env_path)
-import os
-import time
-import heapq
 
 openai.api_key = os.getenv("OPENAI_API_KEY")
+
 
 async def set_api_key(api_key):
     openai.api_key = api_key
 
 # oai
+
 
 async def _search(q, docs, engine="ada"):
     logger.debug("""CONFIG:
@@ -31,7 +32,7 @@ async def _search(q, docs, engine="ada"):
     return response
 
 
-async def _completion(prompt, engine="ada", max_tokens=64, temperature=0.7, top_p=1, stop=None, presence_penalty=0, frequency_penalty=0, echo=False):
+async def _completion(prompt, engine="ada", max_tokens=64, temperature=0.7, top_p=1, stop=None, presence_penalty=0, frequency_penalty=0, echo=False, n=1, stream=False, logprobs=None, best_of=1, logit_bias=None):
     logger.debug("""CONFIG:
     Prompt: {0}
     Temperature: {1}
@@ -41,8 +42,13 @@ async def _completion(prompt, engine="ada", max_tokens=64, temperature=0.7, top_
     Stop: {5}
     Presence Penalty {6}
     Frequency Penalty: {7}
-    Echo: {8}"""
-                 .format(repr(prompt), temperature, engine, max_tokens, top_p, stop, presence_penalty, frequency_penalty, echo))
+    Echo: {8}
+    N: {9}
+    Stream: {10}
+    Log-Probs: {11}
+    Best Of: {12}
+    Logit Bias: {13}"""
+                 .format(repr(prompt), temperature, engine, max_tokens, top_p, stop, presence_penalty, frequency_penalty, echo, n, stream, logprobs, best_of, logit_bias))
     response = openai.Completion.create(engine=engine,
                                         prompt=prompt,
                                         max_tokens=max_tokens,
@@ -51,15 +57,22 @@ async def _completion(prompt, engine="ada", max_tokens=64, temperature=0.7, top_
                                         presence_penalty=presence_penalty,
                                         frequency_penalty=frequency_penalty,
                                         echo=echo,
-                                        stop=stop)
+                                        stop=stop,
+                                        n=n,
+                                        stream=stream,
+                                        logprobs=logprobs,
+                                        best_of=best_of,
+                                        logit_bias=logit_bias)
     logger.debug("GPT-3 Completion Result: {0}".format(response))
     return response
 
 # Helpers
 
+
 def _max_search_doc(resp, n):
     max_docs = heapq.nlargest(n, resp['data'], key=lambda x: x['score'])
     return max_docs
+
 
 def _fetch_response(resp):
     return resp.choices[0].text
@@ -119,35 +132,45 @@ async def gather(*args):
 # Wrappers
 
 
-async def cleaned_completion(prompt, engine="ada", max_tokens=64, temperature=0.7, top_p=1, stop=None, presence_penalty=0, frequency_penalty=0, echo=False):
+async def cleaned_completion(prompt, engine="ada", max_tokens=64, temperature=0.7, top_p=1, stop=None, presence_penalty=0, frequency_penalty=0, echo=False, n=1, stream=False, logprobs=None, best_of=1, logit_bias=None):
     '''
     Wrapper for OpenAI API completion. Returns whitespace trimmed result from GPT-3.
     '''
     resp = await _completion(prompt,
-                            engine=engine,
-                            max_tokens=max_tokens,
-                            temperature=temperature,
-                            top_p=top_p,
-                            presence_penalty=presence_penalty,
-                            frequency_penalty=frequency_penalty,
-                            echo=echo,
-                            stop=stop)
+                             engine=engine,
+                             max_tokens=max_tokens,
+                             temperature=temperature,
+                             top_p=top_p,
+                             presence_penalty=presence_penalty,
+                             frequency_penalty=frequency_penalty,
+                             echo=echo,
+                             stop=stop,
+                             n=n,
+                             stream=stream,
+                             logprobs=logprobs,
+                             best_of=best_of,
+                             logit_bias=logit_bias)
     return _trimmed_fetch_response(resp)
 
 
-async def raw_completion(prompt, engine="ada", max_tokens=64, temperature=0.7, top_p=1, stop=None, presence_penalty=0, frequency_penalty=0, echo=False):
+async def raw_completion(prompt, engine="ada", max_tokens=64, temperature=0.7, top_p=1, stop=None, presence_penalty=0, frequency_penalty=0, echo=False, n=1, stream=False, logprobs=None, best_of=1, logit_bias=None):
     '''
     Wrapper for OpenAI API completion. Returns raw result from GPT-3.
     '''
     resp = await _completion(prompt,
-                            engine=engine,
-                            max_tokens=max_tokens,
-                            temperature=temperature,
-                            top_p=top_p,
-                            presence_penalty=presence_penalty,
-                            frequency_penalty=frequency_penalty,
-                            echo=echo,
-                            stop=stop)
+                             engine=engine,
+                             max_tokens=max_tokens,
+                             temperature=temperature,
+                             top_p=top_p,
+                             presence_penalty=presence_penalty,
+                             frequency_penalty=frequency_penalty,
+                             echo=echo,
+                             stop=stop,
+                             n=n,
+                             stream=stream,
+                             logprobs=logprobs,
+                             best_of=best_of,
+                             logit_bias=logit_bias)
     return _fetch_response(resp)
 
 
@@ -166,7 +189,7 @@ async def fetch_max_search_doc(q, docs, engine="ada", min_score_cutoff=-1, full_
 
     resp = await _search(q, docs, engine=engine)
     if not full_doc:
-        max_docs =  _max_search_doc(resp, n)
+        max_docs = _max_search_doc(resp, n)
         max_docs_filtered = []
         for doc in max_docs:
             if float(doc['score']) > min_score_cutoff:
@@ -176,7 +199,7 @@ async def fetch_max_search_doc(q, docs, engine="ada", min_score_cutoff=-1, full_
         else:
             return None
     else:
-        max_docs =  _max_search_doc(resp, n)
+        max_docs = _max_search_doc(resp, n)
         max_docs_filtered = []
         for doc in max_docs:
             if float(doc['score']) > min_score_cutoff:
