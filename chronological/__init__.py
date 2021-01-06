@@ -78,6 +78,7 @@ def _fetch_response(resp, n):
     if n == 1:
         return resp.choices[0].text
     else:
+        logger.debug('_fetch_response :: returning {0} responses from GPT-3'.format(n))
         texts = []
         for idx in range(0, n):
             texts += resp.choices[idx].text
@@ -88,8 +89,10 @@ def _trimmed_fetch_response(resp, n):
     if n == 1:
         return resp.choices[0].text.strip()
     else:
+        logger.debug(' _trimmed_fetch_response :: returning {0} responses from GPT-3'.format(n))
         texts = []
         for idx in range(0, n):
+            logger.debug(resp.choices[idx].text.strip())
             texts += resp.choices[idx].text.strip()
         return texts
 
