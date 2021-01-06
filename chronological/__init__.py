@@ -74,12 +74,24 @@ def _max_search_doc(resp, n):
     return max_docs
 
 
-def _fetch_response(resp):
-    return resp.choices[0].text
+def _fetch_response(resp, n):
+    if n == 1:
+        return resp.choices[0].text
+    else:
+        texts = []
+        for idx in range(0, n):
+            texts += resp.choices[idx].text
+        return texts
 
 
-def _trimmed_fetch_response(resp):
-    return resp.choices[0].text.strip()
+def _trimmed_fetch_response(resp, n):
+    if n == 1:
+        return resp.choices[0].text.strip()
+    else:
+        texts = []
+        for idx in range(0, n):
+            texts += resp.choices[idx].text.strip()
+        return texts
 
 
 def prepend_prompt(new_stuff, prompt):
@@ -150,7 +162,7 @@ async def cleaned_completion(prompt, engine="ada", max_tokens=64, temperature=0.
                              logprobs=logprobs,
                              best_of=best_of,
                              logit_bias=logit_bias)
-    return _trimmed_fetch_response(resp)
+    return _trimmed_fetch_response(resp, n)
 
 
 async def raw_completion(prompt, engine="ada", max_tokens=64, temperature=0.7, top_p=1, stop=None, presence_penalty=0, frequency_penalty=0, echo=False, n=1, stream=False, logprobs=None, best_of=1, logit_bias=None):
@@ -171,7 +183,7 @@ async def raw_completion(prompt, engine="ada", max_tokens=64, temperature=0.7, t
                              logprobs=logprobs,
                              best_of=best_of,
                              logit_bias=logit_bias)
-    return _fetch_response(resp)
+    return _fetch_response(resp, n)
 
 
 async def fetch_max_search_doc(q, docs, engine="ada", min_score_cutoff=-1, full_doc=False, n=1):
