@@ -105,7 +105,11 @@ Chronology & ChronologyUI are both open source!
 
 This project is an evolving use case and we welcome any contribution or feedback.
 
-First, pull this repo to your local machine using Git clone.
+### Open Bouties: 
+
+- [] adding all the fields the OpenAI Python API accepts to Chronology
+- [] adding a test suite that calls different length chains
+- [] extending `fetch_max_search_doc` to have smarter logic around minimium scores 
 
 ## Learn More
 
