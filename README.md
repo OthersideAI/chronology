@@ -107,9 +107,10 @@ This project is an evolving use case and we welcome any contribution or feedback
 
 ### Open Bouties: 
 
-- [] adding all the fields the OpenAI Python API accepts to Chronology
-- [] adding a test suite that calls different length chains
-- [] extending `fetch_max_search_doc` to have smarter logic around minimium scores 
+- [ ] adding all the fields the OpenAI Python API accepts to Chronology
+- [ ] adding a test suite that calls different length chains
+- [ ] extending `fetch_max_search_doc` to have smarter logic around minimium scores 
+- [ ] make `gather` run faster, using [threads](https://docs.python.org/3/library/asyncio-task.html#running-in-threads)
 
 ## Learn More
 
