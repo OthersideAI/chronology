@@ -44,11 +44,32 @@ Here is a [Loom video](https://www.loom.com/share/47cb8d328ebd446db4d98ea1c0cac2
 
 ### [`main`](#main)
 
-Main function that runs logic. Accepts a function implemented on your end!
+The `main` function is an async function that holds all of your business logic. You then invoke this logic by passing it as an argument to `main`. **Required**
+
+## Example:
+
+```
+# you can name this function anything you want, the name "logic" is arbitrary
+async def logic():
+    # you call the Chronology functions, awaiting the ones that are marked await
+    prompt = read_prompt('example_prompt')
+    completion = await cleaned_completion(prompt, max_tokens=100, engine="davinci", temperature=0.5, top_p=1, frequency_penalty=0.2, stop=["\n\n"])
+
+    print('Completion Response: {0}'.format(completion))
+    
+    # you can also run whatever you want in this function
+    for i in range(4):
+     print("hello")
+
+
+# invoke the Chronology main fn to run the async logic
+main(logic)
+```
 
 ### [`fetch_max_search_doc`](#fetch_max_search_doc)
+####  **Must be awaited**
 
-Fetch document value with max score. Wrapper for OpenAI API Search.
+Fetch document value with max score. Wrapper for OpenAI API Search. 
 
 Optional:
 
@@ -57,14 +78,17 @@ min_score_cutoff = if maximum score is less than cutoff, None will be returned. 
 full_doc = return whole response with max, but doesn't grab doc for you. Defaults to False. [doc, doc.index, doc.score]
 
 ### [`raw_completion`](#raw_completion)
+####  **Must be awaited**
 
 Wrapper for OpenAI API completion. Returns raw result from GPT-3.
 
 ### [`cleaned_completion`](#cleaned_completion)
+####  **Must be awaited**
 
 Wrapper for OpenAI API completion. Returns whitespace trimmed result from GPT-3.
 
 ### [`gather`](#gather)
+####  **Must be awaited**
 
 Run methods in parallel (they don't need to wait for each other to finish).
 
