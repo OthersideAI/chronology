@@ -1,0 +1,8 @@
+My second grader asked me what this passage means:
+"""
+
+{0}
+"""
+
+I rephrased it for him, in plain language a second grader can understand:
+"""

@@ -1,0 +1,12 @@
+Q: What is an elephant's favorite food?
+A: Tree bark
+
+###
+
+Q: What is a otter's favorite food?
+A: Crabs
+
+### 
+
+Q: What is a {0}'s favorite food?
+A:
