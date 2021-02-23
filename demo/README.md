@@ -4,7 +4,7 @@
 
 ## Step 0 - Installation
 
-1. Download Chronology using the command (*you can also find it on pip [here](https://pypi.org/project/chronological/)*):
+1. Download Chronology using command (*you can also find it on pip [here](https://pypi.org/project/chronological/)*):
 ```python
 python3 -m pip install chronological
 ```
