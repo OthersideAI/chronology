@@ -144,4 +144,5 @@ To learn more about OthersideAI, take a look at the following resources:
 
 - [Our Homepage](https://www.othersideai.com/)
 - [Our Twitter](https://twitter.com/othersideai)
-- Contact: info@othersideai.com
+
+Contact: info@othersideai.com
