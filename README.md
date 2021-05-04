@@ -14,13 +14,13 @@ We built this library to be as intuitive as possible. There are no complicated c
 
 # Installation
 
-chronology is hosted on PyPI.
+chronology is hosted on [`PyPI`](https://pypi.org/project/chronology/).
 
 Chronology is supported on Python 3.6 and above.
 
 To install chronology:
 
-`pip install chronological`
+`pip install chronology`
 
 This project also depends on the following packages: 
 * [`openai-api`](https://github.com/openai/openai-python)
