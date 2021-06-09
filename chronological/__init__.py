@@ -10,7 +10,7 @@ env_path = Path('.') / '.env'
 load_dotenv(dotenv_path=env_path)
 
 openai.api_key = os.getenv("OPENAI_API_KEY")
-
+MAX_SEARCH_DOCUMENT_QUANTITY = 200
 
 async def set_api_key(api_key):
     openai.api_key = api_key
@@ -68,6 +68,10 @@ async def _completion(prompt, engine="ada", max_tokens=64, temperature=0.7, top_
 
 # Helpers
 
+def _batch_docs(docs, n):
+    """Yield successive n-sized batches from list of docs."""
+    for i in range(0, len(docs), n):
+        yield docs[i:i + n]
 
 def _max_search_doc(resp, n):
     max_docs = heapq.nlargest(n, resp['data'], key=lambda x: x['score'])
@@ -197,11 +201,16 @@ async def fetch_max_search_doc(q, docs, engine="ada", min_score_cutoff=-1, full_
     min_score_cutoff = if maximum score is less than cutoff, None will be returned. Defaults to -1
 
     full_doc = return whole response with max, but doesn't grab doc for you. Defaults to False. [doc, doc.index, doc.score]
+    
+    n = return top n most similar documents. Defaults to 1.
     '''
     if n > len(docs):
         return 'N > # of docs'
+   
+    resp = {'data':[]}
+    for batch in _batch_docs(docs, MAX_SEARCH_DOCUMENT_QUANTITY):
+        resp['data'].extend((await _search(q, batch, engine=engine))['data'])
 
-    resp = await _search(q, docs, engine=engine)
     if not full_doc:
         max_docs = _max_search_doc(resp, n)
         max_docs_filtered = []
